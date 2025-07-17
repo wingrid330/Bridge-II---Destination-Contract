@@ -24,13 +24,6 @@ contract Destination is AccessControl {
 
 	function wrap(address _underlying_token, address _recipient, uint256 _amount ) public onlyRole(WARDEN_ROLE) {
 		//YOUR CODE HERE
-		//address wrapped_address = underlying_tokens[_underlying_token];
-        //require(wrapped_address != address(0), "Token not registered");
-
-        //BridgeToken token = BridgeToken(wrapped_address);
-        //token.mint(_recipient, _amount);
-
-        //emit Wrap(_underlying_token, wrapped_address, _recipient, _amount);
 		address wrapped = wrapped_tokens[_underlying_token];
 		require(wrapped != address(0), "TokenNotRegistered");
 
@@ -40,13 +33,6 @@ contract Destination is AccessControl {
 
 	function unwrap(address _wrapped_token, address _recipient, uint256 _amount ) public {
 		//YOUR CODE HERE
-		//require(wrapped_tokens[_wrapped_token] != address(0), "Not a wrapped token");
-
-        //BridgeToken token = BridgeToken(_wrapped_token);
-        //token.burnFrom(msg.sender, _amount);
-
-        //address underlying = wrapped_tokens[_wrapped_token];
-        //emit Unwrap(underlying, _wrapped_token, msg.sender, _recipient, _amount);
 		BridgeToken(_wrapped_token).burnFrom(msg.sender, _amount);
 		address underlying = underlying_tokens[_wrapped_token];
 		emit Unwrap(underlying, _wrapped_token, msg.sender, _recipient, _amount);
@@ -54,18 +40,6 @@ contract Destination is AccessControl {
 
 	function createToken(address _underlying_token, string memory name, string memory symbol ) public onlyRole(CREATOR_ROLE) returns(address) {
 		//YOUR CODE HERE
-		//require(underlying_tokens[_underlying_token] == address(0), "Already created");
-
-        //BridgeToken token = new BridgeToken(_underlying_token, name, symbol, address(this));
-        //address wrapped_address = address(token);
-
-        //underlying_tokens[_underlying_token] = wrapped_address;
-        //wrapped_tokens[wrapped_address] = _underlying_token;
-        //tokens.push(wrapped_address);
-
-        //emit Creation(_underlying_token, wrapped_address);
-        //return wrapped_address;
-
 		require(wrapped_tokens[_underlying_token] == address(0), "AlreadyCreated"); // prevent duplicates
 
 		BridgeToken newToken = new BridgeToken(_underlying_token, name, symbol, address(this));
